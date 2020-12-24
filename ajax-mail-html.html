@@ -1,0 +1,55 @@
+
+<!-- Ajax CDN -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Aajax Form  -->
+
+<script>
+	var ajax = {
+		isSubmiting: false,
+		send: function() {
+			
+			if(ajax.isSubmiting == false) {
+				ajax.isSubmiting = true;
+				
+				var userName = $("input[name=user_name]").val();
+				var userEmail = $("input[name=user_email]").val();
+				var userComments = $("textarea").val();
+				
+				if(userName == "" || userEmail == "" || userComments == "")
+					alert("Form not complete");
+				else {
+					
+					ajax.SetText("Sending...");
+					$.post("sendmail.php", {
+						name: userName, email: userEmail, comments: userComments	
+					}, function(data) {
+						if(data == "true") {
+						    ajax.SetText("Your mail has been sent successfully.!");
+						} else {
+							ajax.SetText("Not Sent!");
+							alert(data);	
+						}
+						
+						ajax.isSubmiting = false;
+					});
+                    // ajax.SetText("Your mail has been sent successfully.!");	     
+				}
+			}
+			else alert("You can only send 1 email at a time");
+		},
+		SetText: function(text) {
+			$("#status").html(`<div class='alert alert-success'>${text}</div>`);
+		}
+	}
+</script>
+
+                         <form>
+                            <input type="text" name="user_name" required placeholder="Name">
+                            <input type="text" name="user_email" required placeholder="Email">
+                            <textarea name="comments user_message" placeholder="Message"></textarea>
+                            <button type="button" name="submit-btn" class="site-btn" onclick="ajax.send()">Submit</button>
+                        </form>
+                        <div class="alert" id="status"></div>
+  
